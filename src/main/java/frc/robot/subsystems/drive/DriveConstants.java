@@ -25,8 +25,8 @@ public class DriveConstants {
   public static final double maxSpeedMetersPerSec = 5.74; // TODO: Check this value
   public static final double odometryFrequency = 100.0; // Hz
   public static final double trackWidth =
-      Units.inchesToMeters(8.5); // mesured from CAD: center of wheel to center of wheel
-  public static final double wheelBase = Units.inchesToMeters(8.5);
+      Units.inchesToMeters(23); // mesured from CAD: center of wheel to center of wheel
+  public static final double wheelBase = Units.inchesToMeters(23);
   public static final double driveBaseRadius = Math.hypot(trackWidth / 2.0, wheelBase / 2.0);
   public static final Translation2d[] moduleTranslations =
       new Translation2d[] {
@@ -37,10 +37,10 @@ public class DriveConstants {
       };
 
   // Zeroed rotation values for each module, see setup instructions
-  public static final Rotation2d frontLeftZeroRotation = new Rotation2d(0.0);
-  public static final Rotation2d frontRightZeroRotation = new Rotation2d(0.0);
-  public static final Rotation2d backLeftZeroRotation = new Rotation2d(0.0);
-  public static final Rotation2d backRightZeroRotation = new Rotation2d(0.0);
+  public static final Rotation2d frontLeftZeroRotation = new Rotation2d(-0.39842254320253573);
+  public static final Rotation2d frontRightZeroRotation = new Rotation2d(-3.1072562376605437);
+  public static final Rotation2d backLeftZeroRotation = new Rotation2d(-1.4224608580218716);
+  public static final Rotation2d backRightZeroRotation = new Rotation2d(1.483820915222168);
 
   // Device CAN IDs
   public static final int pigeonCanId = CanIDs.GyroID;
