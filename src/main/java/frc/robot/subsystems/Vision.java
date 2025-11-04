@@ -12,7 +12,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 public class Vision extends SubsystemBase {
 
   // make sure the name in quotes is EXACTLY the same as it is in PV
-  PhotonCamera Limelight = new PhotonCamera("Camera Module v1");
+  PhotonCamera Limelight = new PhotonCamera("Camera_Module_v1");
 
   public Vision() {
     // initalization here
@@ -33,11 +33,9 @@ public class Vision extends SubsystemBase {
       if (result.hasTargets()) {
         SmartDashboard.putBoolean("TARGET", true);
         PhotonTrackedTarget bestTarget = result.getBestTarget();
-        if (bestTarget.getFiducialId() == 22) {
-          SmartDashboard.putNumber("cameraX", bestTarget.getBestCameraToTarget().getX());
-          SmartDashboard.putNumber("cameraY", bestTarget.getBestCameraToTarget().getY());
-          SmartDashboard.putNumber("cameraZ", bestTarget.getBestCameraToTarget().getZ());
-        }
+        SmartDashboard.putNumber("cameraX", bestTarget.getBestCameraToTarget().getX());
+        SmartDashboard.putNumber("cameraY", bestTarget.getBestCameraToTarget().getY());
+        SmartDashboard.putNumber("cameraZ", bestTarget.getBestCameraToTarget().getZ());
       }
     } else {
       SmartDashboard.putBoolean("TARGET", false);
