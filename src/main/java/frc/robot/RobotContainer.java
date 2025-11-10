@@ -14,6 +14,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -154,13 +155,16 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     // Swerve to target
+    PIDController targetPid = new PIDController(.75, .5, 0);
     m_driverController
         .y()
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
-                () -> 0,
-                () -> SmartDashboard.getNumber("cameraY", 0), //TODO: write a PID
+                () -> -targetPid.calculate(SmartDashboard.getNumber("cameraX", 0), 1),
+                () ->
+                    -targetPid.calculate(
+                        SmartDashboard.getNumber("cameraY", 0), 0), // TODO: write a PID
                 () -> new Rotation2d()));
   }
 
