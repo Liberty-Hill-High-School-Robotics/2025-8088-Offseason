@@ -126,9 +126,9 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -m_driverController.getLeftY(),
-            () -> -m_driverController.getLeftX(),
-            () -> -m_driverController.getRightX()));
+            () -> -Math.pow(m_driverController.getLeftY(), 3), // cube inputs for better control
+            () -> -Math.pow(m_driverController.getLeftX(), 3),
+            () -> -Math.pow(m_driverController.getRightX(), 3)));
 
     // Lock to 0° when A button is held
     m_driverController // looks like a beter version of the trigger method we have used
@@ -155,16 +155,15 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     // Swerve to target
-    PIDController targetPid = new PIDController(.75, .5, 0);
+    PIDController targetPid =
+        new PIDController(.75, .5, 0); // TODO: seperate into x and y, difrent pid for close?
     m_driverController
         .y()
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
                 () -> -targetPid.calculate(SmartDashboard.getNumber("cameraX", 0), 1),
-                () ->
-                    -targetPid.calculate(
-                        SmartDashboard.getNumber("cameraY", 0), 0), // TODO: write a PID
+                () -> -targetPid.calculate(SmartDashboard.getNumber("cameraY", 0), 0),
                 () -> new Rotation2d()));
   }
 
