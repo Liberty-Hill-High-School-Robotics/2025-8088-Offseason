@@ -126,9 +126,9 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -Math.pow(m_driverController.getLeftY(), 3), // cube inputs for better control
-            () -> -Math.pow(m_driverController.getLeftX(), 3),
-            () -> -Math.pow(m_driverController.getRightX(), 3)));
+            () -> -m_driverController.getLeftY(),
+            () -> -m_driverController.getLeftX(),
+            () -> -m_driverController.getRightX()));
 
     // Lock to 0° when A button is held
     m_driverController // looks like a beter version of the trigger method we have used
@@ -156,7 +156,7 @@ public class RobotContainer {
 
     // Swerve to target
     PIDController targetPid =
-        new PIDController(.75, .5, 0); // TODO: seperate into x and y, difrent pid for close?
+        new PIDController(1.5, .225, 0); // TODO: seperate into x and y, difrent pid for close?
     m_driverController
         .y()
         .whileTrue(
