@@ -1,12 +1,15 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.Pigeon2;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.CanIDs;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -21,12 +24,13 @@ public class Vision extends SubsystemBase {
 
   // make sure the name in quotes is EXACTLY the same as it is in PV
   PhotonCamera Limelight = new PhotonCamera("Camera_Module_v1");
-  public final Pigeon2 gyro = new Pigeon2(CanIDs.GyroID);
   private final Field2d field = new Field2d();
+  private final VisionConsumer consumer;
+  private final Rotation2d gyro;
 
-  public Vision() {
-    // initalization here
-    // none needed ^
+  public Vision(VisionConsumer consumer, Rotation2d gyro) {
+    this.consumer = consumer;
+    this.gyro = gyro;
   }
 
   @Override
@@ -58,13 +62,21 @@ public class Vision extends SubsystemBase {
 
         EstimatedRobotPose photonPoseTracked =
             photonEstimator.update(Limelight.getLatestResult()).get();
-        Pose2d VisionPose =
-            new Pose2d(
-                photonPoseTracked.estimatedPose.getX(),
-                photonPoseTracked.estimatedPose.getY(),
-                gyro.getRotation2d());
+        Pose2d VisionPose = photonPoseTracked.estimatedPose.toPose2d();
         field.setRobotPose(VisionPose);
         SmartDashboard.putData("Field", field);
+
+        // Calculate standard deviations
+        double stdDevFactor =
+            Math.pow(bestTarget.getBestCameraToTarget().getX(), 2.0) / 1; // Assumes only one tag
+        double linearStdDev = Constants.AutoConstants.linearStdDevBaseline * stdDevFactor;
+        double angularStdDev = Constants.AutoConstants.angularStdDevBaseline * stdDevFactor;
+
+        // Send pose to drive
+        consumer.accept(
+            VisionPose,
+            photonPoseTracked.timestampSeconds,
+            VecBuilder.fill(linearStdDev, linearStdDev, angularStdDev));
       }
 
     } else {
@@ -84,4 +96,13 @@ public class Vision extends SubsystemBase {
 
   // as well as check for limits and reset encoders,
   // return true/false if limit is true, or encoder >= x value
+
+  // Sends Pose to Drive
+  @FunctionalInterface
+  public static interface VisionConsumer {
+    public void accept(
+        Pose2d visionRobotPoseMeters,
+        double timestampSeconds,
+        Matrix<N3, N1> visionMeasurementStdDevs);
+  }
 }

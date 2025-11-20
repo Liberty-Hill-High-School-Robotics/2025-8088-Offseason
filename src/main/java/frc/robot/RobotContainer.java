@@ -44,7 +44,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
-  private final Vision vision = new Vision();
+  private final Vision vision;
 
   // Controller
   CommandXboxController m_driverController =
@@ -67,6 +67,7 @@ public class RobotContainer {
                 new ModuleIOSpark(1),
                 new ModuleIOSpark(2),
                 new ModuleIOSpark(3));
+        vision = new Vision(drive::addVisionMeasurement, drive.getRotation());
         break;
 
       case SIM:
@@ -78,6 +79,7 @@ public class RobotContainer {
                 new ModuleIOSim(),
                 new ModuleIOSim(),
                 new ModuleIOSim());
+        vision = new Vision(drive::addVisionMeasurement, drive.getRotation());
         break;
 
       default:
@@ -89,6 +91,7 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
+        vision = new Vision(drive::addVisionMeasurement, drive.getRotation());
         break;
     }
 
