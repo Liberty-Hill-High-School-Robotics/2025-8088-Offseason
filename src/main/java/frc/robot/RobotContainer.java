@@ -67,7 +67,7 @@ public class RobotContainer {
                 new ModuleIOSpark(1),
                 new ModuleIOSpark(2),
                 new ModuleIOSpark(3));
-        vision = new Vision(drive::addVisionMeasurement, drive.getRotation());
+        vision = new Vision(drive::addVisionMeasurement);
         break;
 
       case SIM:
@@ -79,7 +79,7 @@ public class RobotContainer {
                 new ModuleIOSim(),
                 new ModuleIOSim(),
                 new ModuleIOSim());
-        vision = new Vision(drive::addVisionMeasurement, drive.getRotation());
+        vision = new Vision(drive::addVisionMeasurement);
         break;
 
       default:
@@ -91,7 +91,7 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        vision = new Vision(drive::addVisionMeasurement, drive.getRotation());
+        vision = new Vision(drive::addVisionMeasurement);
         break;
     }
 
