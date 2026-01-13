@@ -24,7 +24,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 public class Vision extends SubsystemBase {
 
   // make sure the name in quotes is EXACTLY the same as it is in PV
-  PhotonCamera Limelight = new PhotonCamera("Camera_Module_v1");
+  PhotonCamera AprilTagCam = new PhotonCamera("AprilTagCam");
   private final Field2d field = new Field2d();
   private final EstimateConsumer estConsumer;
   private final PhotonPoseEstimator photonEstimator;
@@ -44,7 +44,7 @@ public class Vision extends SubsystemBase {
 
     // Cheack every tag to estimate Pose
     Optional<EstimatedRobotPose> visionEst = Optional.empty();
-    for (PhotonPipelineResult change : Limelight.getAllUnreadResults()) {
+    for (PhotonPipelineResult change : AprilTagCam.getAllUnreadResults()) {
       visionEst = photonEstimator.update(change);
       updateEstimationStdDevs(visionEst, change.getTargets());
 
